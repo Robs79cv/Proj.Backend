@@ -1,4 +1,3 @@
-
 const produtos = [];
 
 function listarTodos(req, res) {
@@ -22,19 +21,29 @@ function buscarPeloId(req, res, next) {
   }
 }
 
+function validarDados(req, res, next) {
+  const { nome, preco } = req.body;
+
+  if (nome && preco) {
+    next();
+  } else {
+    res.status(422).json({msg: "Nome e preço são obrigatórios"})
+  }
+}
+
 function criar(req, res) {
-  const { nome, preco, gramatura} = req.body;
+  const { nome, preco } = req.body;
   const novo = { id: produtos.length + 1, nome, preco};
   produtos.push(novo);
   res.status(201).json(novo);
 }
 
 function atualizar(req, res) {
-  const { encontrado } = req;
-  const { nome, preco, gramatura } = req.body;
-  encontrado.nome = nome;
-  encontrado.preco = preco;
-  res.json(encontrado);
+  const { produto } = req;
+  const { nome, preco } = req.body;
+  produto.nome = nome;
+  produto.preco = preco;
+  res.json(produto);
 }
 
 function remover(req, res) {
@@ -44,4 +53,5 @@ function remover(req, res) {
   res.status(204).end();
 }
 
-module.exports = { listarTodos, exibir, buscarPeloId, criar, atualizar, remover }
+module.exports = { listarTodos, exibir, buscarPeloId,
+   validarDados, criar, atualizar, remover }
