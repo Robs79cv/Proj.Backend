@@ -1,0 +1,144 @@
+openapi: 3.0.0
+info:
+  title: API REST
+  description: Um exemplo de API REST usando ExpressJS
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000/
+    description: Ambiente de desenvolvimento
+tags:
+  - name: produtos
+paths:
+  /produtos:
+    get:
+      description: Listar todos produtos
+      tags: 
+        - produtos
+      responses:
+        200:
+          description: Uma lista de produtos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayDeProdutos'
+    post:
+      description: Criar um novo produto
+      tags:
+        - produtos
+      requestBody:
+        description: Um JSON com dados do novo produto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        201:
+          description: Produto criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        422:
+          description: Nome e preco são obrigatórios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+  /produtos/{produtoId}:
+    get:
+      description: Obtem um produto pelo ID
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Um JSON com dados do produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        404:
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+    put:
+      description: Atualizar um produto
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Um JSON com dados atualizados do produto
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Produto'
+      responses:
+        200:
+          description: Produto atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Produto'
+        404:
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+        422:
+          description: Nome e preco são obrigatórios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+    delete:
+      description: Remover um produto
+      tags:
+        - produtos
+      parameters:
+        - in: path
+          name: produtoId
+          required: true
+          type: integer
+      responses:
+        204:
+          description: Produto removido com sucesso
+        404:
+          description: Produto não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mensagem'
+components:
+  schemas:
+    ArrayDeProdutos:
+      type: array
+      items:
+        $ref: '#/components/schemas/Produto'
+    Produto:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        preco:
+          type: number
+    Mensagem:
+      type: object
+      properties:
+        msg:
+          type: string
